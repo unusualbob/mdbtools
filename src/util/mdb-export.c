@@ -45,7 +45,7 @@ print_col(FILE *outfile, gchar *col_val, int quote_text, int col_type, int bin_l
 		escape_char = quote_char;
 
 	if (quote_text && is_quote_type(col_type)) {
-		fputs(quote_char, outfile);
+		/*fputs(quote_char, outfile);*/
 		while (1) {
 			if (is_binary_type(col_type)) {
 				if (bin_mode == MDB_BINEXPORT_STRIP)
@@ -56,20 +56,24 @@ print_col(FILE *outfile, gchar *col_val, int quote_text, int col_type, int bin_l
 				if (!*col_val)
 					break;
 
-			if (quote_len && !strncmp(col_val, quote_char, quote_len)) {
+			if (quote_len && !strncmp(col_val, quote_char, quote_len) && bin_mode != MDB_BINEXPORT_OCTAL) {
 				fprintf(outfile, "%s%s", escape_char, quote_char);
 				col_val += quote_len;
 #ifndef DONT_ESCAPE_ESCAPE
-			} else if (orig_escape_len && !strncmp(col_val, escape_char, orig_escape_len)) {
+			} else if (orig_escape_len && !strncmp(col_val, escape_char, orig_escape_len) && bin_mode != MDB_BINEXPORT_OCTAL) {
 				fprintf(outfile, "%s%s", escape_char, escape_char);
 				col_val += orig_escape_len;
 #endif
-			} else if (is_binary_type(col_type) && *col_val <= 0 && bin_mode == MDB_BINEXPORT_OCTAL)
-				fprintf(outfile, "\\%03o", *(unsigned char*)col_val++);
-			else
+			} else if (is_binary_type(col_type) && bin_mode == MDB_BINEXPORT_OCTAL) {
+				fprintf(outfile, "%02X", *(unsigned char*)col_val++);
+			} else {
+				/*fputs(quote_char, outfile);
+				fputs(quote_char, outfile);
+				fputs(quote_char, outfile);*/
 				putc(*col_val++, outfile);
+			}
 		}
-		fputs(quote_char, outfile);
+		/*fputs(quote_char, outfile);*/
 	} else
 		fputs(col_val, outfile);
 }
