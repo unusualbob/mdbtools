@@ -1,3 +1,11 @@
+### Warning
+
+This branch is a modification of mdbTools specifically for PhotoRecall mdb image exports. See the reasoning behind it here: https://robriddle.io/extracting-images-from-photorecall-deluxe-files
+
+This software is probably buggy and there is no guarantee it will work
+
+---
+
 This is mdbtools version 0.7.1
 
 Welcome to the exciting world of MDB Tools! In short, MDB Tools is a set of 
